@@ -1,15 +1,20 @@
 const nodemailer = require("nodemailer");
 
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST || "sandbox.smtp.mailtrap.io",
-  port: parseInt(process.env.EMAIL_PORT || "2525", 10),
-  auth: {
-    user: process.env.EMAIL_USER || "",
-    pass: process.env.EMAIL_PASS || "",
-  },
-});
+const emailConfigured = !!(process.env.EMAIL_USER && process.env.EMAIL_PASS);
+
+const transporter = emailConfigured
+  ? nodemailer.createTransport({
+      host: process.env.EMAIL_HOST || "sandbox.smtp.mailtrap.io",
+      port: parseInt(process.env.EMAIL_PORT || "2525", 10),
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    })
+  : null;
 
 async function sendBookingConfirmation(to, name, eventTitle, date, seats, totalAmount, reference, qrBase64) {
+  if (!emailConfigured) { console.log("EMAIL SKIPPED: set EMAIL_USER/EMAIL_PASS to enable"); return; }
   const seatList = seats.map((s) => `${s.label} (${s.category})`).join(", ");
 
   await transporter.sendMail({
@@ -37,6 +42,7 @@ async function sendBookingConfirmation(to, name, eventTitle, date, seats, totalA
 }
 
 async function sendWaitlistOffer(to, name, eventTitle, categoryName, offerLink, expiresAt) {
+  if (!emailConfigured) { console.log("EMAIL SKIPPED: set EMAIL_USER/EMAIL_PASS to enable"); return; }
   await transporter.sendMail({
     from: process.env.EMAIL_FROM || "noreply@ticketbook.com",
     to,

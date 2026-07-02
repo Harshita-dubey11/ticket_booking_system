@@ -158,6 +158,8 @@ const cancelBooking = asyncHandler(async (req, res) => {
   await prisma.$transaction(async (tx) => {
     await tx.booking.update({ where: { id: bookingId }, data: { status: "cancelled" } });
 
+    await tx.bookingSeat.deleteMany({ where: { bookingId } });
+
     const showSeatIds = booking.showSeats.map((s) => s.id);
     const firstSeat = booking.showSeats[0];
     const categoryId = firstSeat?.seat?.categoryId;
