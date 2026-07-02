@@ -12,6 +12,7 @@ const eventRoutes = require("./routes/events");
 const holdRoutes = require("./routes/holds");
 const bookingRoutes = require("./routes/bookings");
 const waitlistRoutes = require("./routes/waitlist");
+const uploadRoutes = require("./routes/upload");
 
 const app = express();
 const server = http.createServer(app);
@@ -36,6 +37,8 @@ app.use("/api/events", eventRoutes);
 app.use("/api/holds", holdRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/waitlist", waitlistRoutes);
+app.use("/api/upload", uploadRoutes);
+app.use("/uploads", express.static("uploads"));
 
 app.get("/api/health", (_req, res) => {
   res.json({ status: "ok" });

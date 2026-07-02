@@ -10,7 +10,8 @@ export default function OrganiserDashboard() {
   const [events, setEvents] = useState([]);
   const [venues, setVenues] = useState([]);
   const [tab, setTab] = useState("list");
-  const [form, setForm] = useState({ title: "", description: "", type: "movie", venueId: "", date: "", duration: 120 });
+  const [form, setForm] = useState({ title: "", description: "", type: "movie", venueId: "", date: "", duration: 120, posterUrl: "" });
+  const [uploading, setUploading] = useState(false);
   const [pricing, setPricing] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [message, setMessage] = useState({ text: "", type: "" });
@@ -31,7 +32,7 @@ export default function OrganiserDashboard() {
     try {
       const data = await api.post("/events", form);
       showMsg("Event created successfully");
-      setForm({ title: "", description: "", type: "movie", venueId: "", date: "", duration: 120 });
+      setForm({ title: "", description: "", type: "movie", venueId: "", date: "", duration: 120, posterUrl: "" });
       await loadEvents();
       if (data.id) { handleSelectEvent(data.id); setTab("manage"); }
     } catch (err) { showMsg(err.message, "error"); }
@@ -124,6 +125,30 @@ export default function OrganiserDashboard() {
               <div className="space-y-2">
                 <label className="text-sm font-medium">Duration (minutes)</label>
                 <Input type="number" placeholder="120" value={form.duration} onChange={(e) => setForm({ ...form, duration: +e.target.value })} min={1} />
+              </div>
+              <div className="space-y-2 sm:col-span-2 lg:col-span-3">
+                <label className="text-sm font-medium">Poster (optional)</label>
+                <div className="flex gap-2">
+                  <Input placeholder="Paste image URL or upload..." value={form.posterUrl} onChange={(e) => setForm({ ...form, posterUrl: e.target.value })} className="flex-1" />
+                  <input type="file" accept="image/jpeg,image/png,image/webp" className="hidden" id="poster-upload" onChange={async (e) => {
+                    const file = e.target.files?.[0]; if (!file) return;
+                    setUploading(true);
+                    try {
+                      const fd = new FormData(); fd.append("poster", file);
+                      const res = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000/api"}/upload/poster`, { method: "POST", headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }, body: fd });
+                      const data = await res.json();
+                      if (data.url) setForm({ ...form, posterUrl: data.url });
+                    } catch (err) { alert("Upload failed: " + err.message); } finally { setUploading(false); }
+                  }} />
+                  <Button type="button" variant="outline" size="sm" disabled={uploading} onClick={() => document.getElementById("poster-upload")?.click()}>
+                    {uploading ? "..." : "Upload"}
+                  </Button>
+                </div>
+                {form.posterUrl && (
+                  <div className="mt-2 w-24 h-24 rounded-lg overflow-hidden bg-muted border">
+                    <img src={form.posterUrl} alt="preview" className="w-full h-full object-cover" onError={(e) => { e.target.style.display = "none"; }} />
+                  </div>
+                )}
               </div>
               <div className="sm:col-span-2 lg:col-span-3 pt-2">
                 <Button type="submit" className="w-full sm:w-auto">Create Event</Button>

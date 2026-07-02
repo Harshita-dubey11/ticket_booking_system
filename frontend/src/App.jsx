@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import ErrorBoundary from "./components/ErrorBoundary";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -6,7 +6,9 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import AdminDashboard from "./pages/AdminDashboard";
+import AdminCreate from "./pages/AdminCreate";
 import OrganiserDashboard from "./pages/OrganiserDashboard";
+import OrganiserCreate from "./pages/OrganiserCreate";
 import MyEvents from "./pages/MyEvents";
 import EventBrowse from "./pages/EventBrowse";
 import EventDetail from "./pages/EventDetail";
@@ -31,7 +33,9 @@ export default function App() {
           <Route path="/bookings" element={<ProtectedRoute><BookingHistory /></ProtectedRoute>} />
           <Route path="/waitlist" element={<ProtectedRoute><WaitlistPage /></ProtectedRoute>} />
           <Route path="/organiser" element={<ProtectedRoute roles={["organiser", "admin"]}><OrganiserDashboard /></ProtectedRoute>} />
+          <Route path="/organiser/create" element={<ProtectedRoute roles={["organiser", "admin"]}><OrganiserCreate /></ProtectedRoute>} />
           <Route path="/admin" element={<ProtectedRoute roles={["admin"]}><AdminDashboard /></ProtectedRoute>} />
+          <Route path="/admin/create" element={<ProtectedRoute roles={["admin"]}><AdminCreate /></ProtectedRoute>} />
           <Route path="/my-events" element={<ProtectedRoute roles={["organiser", "admin"]}><MyEvents /></ProtectedRoute>} />
           <Route path="*" element={<NotFound />} />
         </Routes>

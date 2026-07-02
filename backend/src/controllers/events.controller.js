@@ -49,7 +49,7 @@ const getEvent = asyncHandler(async (req, res) => {
 });
 
 const createEvent = asyncHandler(async (req, res) => {
-  const { title, description, type, venueId, date, duration } = req.body;
+  const { title, description, type, venueId, date, duration, posterUrl } = req.body;
   if (!title || !type || !venueId || !date || !duration) {
     throw new AppError(400, "title, type, venueId, date, and duration are required");
   }
@@ -65,6 +65,7 @@ const createEvent = asyncHandler(async (req, res) => {
       venueId,
       date: new Date(date),
       duration,
+      posterUrl: posterUrl || null,
       createdBy: req.user.userId,
     },
   });

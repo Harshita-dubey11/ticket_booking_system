@@ -4,26 +4,26 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 220 20% 97%;
+    --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
-    --radius: 0.5rem;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 252 76% 58%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 240 5% 26%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 240 4% 46%;
+    --accent: 252 60% 95%;
+    --accent-foreground: 252 60% 35%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 240 6% 90%;
+    --input: 240 6% 90%;
+    --ring: 252 76% 58%;
+    --radius: 0.75rem;
   }
 }
 
@@ -32,30 +32,55 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    @apply bg-background text-foreground antialiased;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   }
 }
 
-/* Seat map styles */
-.seat-grid { @apply flex flex-col gap-1.5; }
-.seat-row { @apply flex items-center gap-2; }
-.row-label { @apply w-6 text-center text-xs font-semibold text-muted-foreground; }
-.row-seats { @apply flex gap-1 flex-wrap; }
+@layer components {
+  .glass {
+    @apply bg-white/80 backdrop-blur-xl border-b border-white/20;
+  }
 
-.seat {
-  @apply w-10 h-10 rounded-md border-2 bg-card text-xs font-semibold transition-all duration-150 flex items-center justify-center cursor-pointer;
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5;
+  }
+
+  .gradient-primary {
+    @apply bg-gradient-to-r from-indigo-600 to-violet-600;
+  }
+
+  .gradient-accent {
+    background: linear-gradient(135deg, hsl(252, 76%, 58%), hsl(272, 76%, 58%));
+  }
+
+  .nav-link {
+    @apply relative text-sm font-medium text-foreground/70 hover:text-foreground transition-colors px-3 py-1.5 rounded-lg hover:bg-accent/60;
+  }
+
+  .nav-link.active {
+    @apply text-primary;
+    background-color: hsl(var(--primary) / 0.08);
+  }
+
+  .seat-grid { @apply flex flex-col gap-1.5; }
+  .seat-row { @apply flex items-center gap-2; }
+  .row-label { @apply w-6 text-center text-xs font-semibold text-muted-foreground; }
+  .row-seats { @apply flex gap-1 flex-wrap; }
+
+  .seat {
+    @apply w-10 h-10 rounded-lg border-2 bg-card text-xs font-semibold transition-all duration-150 flex items-center justify-center cursor-pointer;
+  }
+
+  .seat:hover:not(:disabled) { @apply scale-110 z-10; }
+  .seat:disabled { @apply cursor-not-allowed opacity-60; }
+  .seat.available { @apply bg-emerald-50 text-emerald-700 border-emerald-300 hover:bg-emerald-100; }
+  .seat.held { @apply bg-amber-50 text-amber-700 border-amber-300; }
+  .seat.booked { @apply bg-rose-50 text-rose-700 border-rose-300; }
+  .seat.selected { @apply bg-primary text-primary-foreground border-primary scale-110 !important; }
+  .seat.mine { @apply ring-2 ring-amber-400; }
 }
 
-.seat:hover:not(:disabled) { @apply scale-110 z-10; }
-.seat:disabled { @apply cursor-not-allowed opacity-60; }
-.seat.available { @apply bg-green-50 text-green-700 border-green-300 hover:bg-green-100; }
-.seat.held { @apply bg-orange-50 text-orange-700 border-orange-300; }
-.seat.booked { @apply bg-red-50 text-red-700 border-red-300; }
-.seat.selected { @apply bg-primary text-primary-foreground border-primary scale-110 !important; }
-.seat.mine { @apply ring-2 ring-orange-400; }
-
-/* Scrollbar styles */
 .item-list { @apply space-y-0 max-h-96 overflow-y-auto; }
 .item-list li { @apply flex justify-between items-center px-3 py-2.5 border-b border-border cursor-pointer text-sm transition-colors hover:bg-muted; }
 .item-list li.active { @apply bg-primary/10 font-semibold; }
