@@ -5,6 +5,7 @@ import { useAuth } from "../context/AuthContext";
 import SeatMap from "../components/SeatMap";
 import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../components/ui/card";
 
 export default function EventDetail() {
   const { id } = useParams();
@@ -17,7 +18,7 @@ export default function EventDetail() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    api.get(`/events/${id}`).then(setData).catch(() => navigate("/events"));
+    api.get(`/events/${id}/seats`).then(setData).catch(() => navigate("/events"));
   }, [id, navigate]);
 
   function toggleSeat(seatId) {
@@ -63,41 +64,64 @@ export default function EventDetail() {
   const { event, venue, categories, seatGrid } = data;
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">{event.title}</h1>
-        <p className="text-muted-foreground mt-1">
-          <Badge variant="outline" className="mr-2 capitalize">{event.type}</Badge>
-          {venue.name} · {new Date(event.date).toLocaleDateString()} {new Date(event.date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} · {event.duration}min
-        </p>
+    <div className="max-w-5xl mx-auto space-y-8 py-6">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">{event.title}</h1>
+          <div className="flex flex-wrap items-center gap-2 mt-2 text-muted-foreground">
+            <Badge variant="outline" className="capitalize">{event.type}</Badge>
+            <span className="text-sm">{venue.name}</span>
+            <span className="text-xs text-muted-foreground/50" aria-hidden="true">·</span>
+            <span className="text-sm">{new Date(event.date).toLocaleDateString()} {new Date(event.date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
+            <span className="text-xs text-muted-foreground/50" aria-hidden="true">·</span>
+            <span className="text-sm">{event.duration}min</span>
+          </div>
+        </div>
       </div>
 
       <SeatMap seatGrid={seatGrid} categories={categories} eventId={event.id} selectedSeats={selectedSeats} onToggleSeat={toggleSeat} heldByMe={user?.id} />
 
-      <div className="bg-card border rounded-xl p-5 space-y-3">
-        <p className="text-sm">
-          Selected: <strong>{selectedSeats.length > 0 ? `${selectedSeats.length} seats` : "None"}</strong>
-          {heldUntil && <span className="text-orange-600 ml-2">(held until {new Date(heldUntil).toLocaleTimeString()})</span>}
-        </p>
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base">Booking</CardTitle>
+          <CardDescription>
+            {selectedSeats.length > 0
+              ? `${selectedSeats.length} seat${selectedSeats.length > 1 ? "s" : ""} selected`
+              : "Click on an available seat above to select it"}
+            {heldUntil && (
+              <span className="text-orange-600 ml-2 font-medium">
+                (held until {new Date(heldUntil).toLocaleTimeString()})
+              </span>
+            )}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {error && <div className="text-sm text-destructive bg-destructive/10 p-3 rounded-md border border-destructive/20">{error}</div>}
+          {message && <div className="text-sm text-green-700 bg-green-50 p-3 rounded-md border border-green-200">{message}</div>}
 
-        {error && <p className="text-sm text-destructive bg-destructive/10 p-3 rounded-md">{error}</p>}
-        {message && <p className="text-sm text-green-700 bg-green-50 p-3 rounded-md">{message}</p>}
+          <div className="flex flex-wrap gap-3">
+            {selectedSeats.length > 0 && !heldUntil && <Button onClick={handleHold}>Hold Seats</Button>}
+            {heldUntil && <Link to={`/checkout/${event.id}`}><Button>Proceed to Booking</Button></Link>}
+            {heldUntil && <Button variant="outline" onClick={handleRelease}>Release Seats</Button>}
+          </div>
+        </CardContent>
+      </Card>
 
-        <div className="flex gap-3">
-          {selectedSeats.length > 0 && !heldUntil && <Button onClick={handleHold}>Hold Seats</Button>}
-          {heldUntil && <Link to={`/checkout/${event.id}`}><Button>Proceed to Booking</Button></Link>}
-          {heldUntil && <Button variant="outline" onClick={handleRelease}>Release Seats</Button>}
-        </div>
-      </div>
-
-      <div className="bg-card border rounded-xl p-5 space-y-3">
-        <h3 className="font-semibold">Sold out? Join the waitlist</h3>
-        <div className="flex gap-2">
-          {categories.map((cat) => (
-            <Button key={cat.id} variant="outline" size="sm" onClick={() => handleJoinWaitlist(cat.id)}>{cat.name}</Button>
-          ))}
-        </div>
-      </div>
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base">Waitlist</CardTitle>
+          <CardDescription>Sold out? Join the waitlist and get notified when seats open up</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-wrap gap-2">
+            {categories.map((cat) => (
+              <Button key={cat.id} variant="outline" size="sm" onClick={() => handleJoinWaitlist(cat.id)}>
+                {cat.name}
+              </Button>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
