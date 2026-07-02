@@ -1,8 +1,8 @@
-import express from "express";
-import cors from "cors";
-import { config } from "./config";
-import { errorHandler } from "./middleware/errorHandler";
-import authRoutes from "./routes/auth";
+const express = require("express");
+const cors = require("cors");
+const { config } = require("./config");
+const { errorHandler } = require("./middleware/errorHandler");
+const authRoutes = require("./routes/auth");
 
 const app = express();
 

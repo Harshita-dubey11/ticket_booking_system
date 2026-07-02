@@ -1,17 +1,14 @@
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
 
-function getToken(): string | null {
+function getToken() {
   return localStorage.getItem("token");
 }
 
-async function request<T>(
-  path: string,
-  options: RequestInit = {},
-): Promise<T> {
+export async function request(path, options = {}) {
   const token = getToken();
-  const headers: Record<string, string> = {
+  const headers = {
     "Content-Type": "application/json",
-    ...(options.headers as Record<string, string>),
+    ...options.headers,
   };
   if (token) headers["Authorization"] = `Bearer ${token}`;
 
@@ -26,7 +23,7 @@ async function request<T>(
 }
 
 export const api = {
-  get: <T>(path: string) => request<T>(path),
-  post: <T>(path: string, body?: unknown) =>
-    request<T>(path, { method: "POST", body: body ? JSON.stringify(body) : undefined }),
+  get: (path) => request(path),
+  post: (path, body) =>
+    request(path, { method: "POST", body: body ? JSON.stringify(body) : undefined }),
 };
