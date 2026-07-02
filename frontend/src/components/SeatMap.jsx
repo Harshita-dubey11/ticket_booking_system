@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { connectSocket } from "../services/socket";
+import { Badge } from "./ui/badge";
 
 export default function SeatMap({ seatGrid, categories, eventId, selectedSeats, onToggleSeat, heldByMe }) {
   const [liveSeats, setLiveSeats] = useState({});
@@ -27,39 +28,33 @@ export default function SeatMap({ seatGrid, categories, eventId, selectedSeats, 
     };
   }, [eventId]);
 
-  const getSeatStatus = useCallback(
-    (showSeatId, serverStatus) => {
-      if (liveSeats[showSeatId]) return liveSeats[showSeatId].status;
-      return serverStatus;
-    },
-    [liveSeats],
-  );
+  const getSeatStatus = useCallback((showSeatId, serverStatus) => {
+    if (liveSeats[showSeatId]) return liveSeats[showSeatId].status;
+    return serverStatus;
+  }, [liveSeats]);
 
   if (!seatGrid || seatGrid.length === 0) {
-    return <p>No seats available for this event.</p>;
+    return <p className="text-muted-foreground py-8 text-center">No seats available for this event.</p>;
   }
 
   return (
-    <div className="seat-map-container">
-      <div className="seat-legend">
+    <div className="bg-card border rounded-xl p-6 space-y-4">
+      <div className="flex flex-wrap gap-4 pb-3 border-b">
         {categories.map((cat) => (
-          <span key={cat.id} className="legend-item">
-            <span className="legend-swatch" style={{ background: cat.color }} />
+          <div key={cat.id} className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <span className="w-3.5 h-3.5 rounded-sm inline-block" style={{ background: cat.color }} />
             {cat.name}
-          </span>
+          </div>
         ))}
-        <span className="legend-item">
-          <span className="legend-swatch" style={{ background: "#4caf50" }} />
-          Available
-        </span>
-        <span className="legend-item">
-          <span className="legend-swatch" style={{ background: "#ff9800" }} />
-          Held
-        </span>
-        <span className="legend-item">
-          <span className="legend-swatch" style={{ background: "#f44336" }} />
-          Booked
-        </span>
+        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+          <span className="w-3.5 h-3.5 rounded-sm inline-block bg-green-400" /> Available
+        </div>
+        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+          <span className="w-3.5 h-3.5 rounded-sm inline-block bg-orange-400" /> Held
+        </div>
+        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+          <span className="w-3.5 h-3.5 rounded-sm inline-block bg-red-400" /> Booked
+        </div>
       </div>
 
       <div className="seat-grid">
