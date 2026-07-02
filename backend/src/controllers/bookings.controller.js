@@ -76,8 +76,10 @@ const createBooking = asyncHandler(async (req, res) => {
         data: { status: "booked", bookingId: booking.id },
       });
 
-      await tx.bookingSeat.create({
-        data: { bookingId: booking.id, showSeatId: row.id, priceAtTime: price },
+      await tx.bookingSeat.upsert({
+        where: { showSeatId: row.id },
+        create: { bookingId: booking.id, showSeatId: row.id, priceAtTime: price },
+        update: { bookingId: booking.id, priceAtTime: price },
       });
     }
 
