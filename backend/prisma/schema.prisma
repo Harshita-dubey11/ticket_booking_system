@@ -133,7 +133,7 @@ model Booking {
   userId      String   @map("user_id")
   eventId     String   @map("event_id")
   totalAmount Decimal  @map("total_amount") @db.Decimal(10, 2)
-  status      String   @default("confirmed")
+  status      String   @default("pending")
   qrCode      String?  @map("qr_code")
   createdAt   DateTime @default(now()) @map("created_at")
 

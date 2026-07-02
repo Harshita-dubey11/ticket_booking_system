@@ -46,7 +46,13 @@ export default function EventBrowse() {
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {events.map((ev) => (
           <Card key={ev.id} className="overflow-hidden hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5">
-            <div className="h-2" style={{ background: ev.type === "movie" ? "linear-gradient(90deg, #6366f1, #8b5cf6)" : "linear-gradient(90deg, #f59e0b, #ef4444)" }} />
+            {ev.posterUrl ? (
+              <div className="aspect-[16/9] overflow-hidden bg-muted">
+                <img src={ev.posterUrl} alt={ev.title} className="w-full h-full object-cover" onError={(e) => { e.target.style.display = "none"; e.target.parentElement.className = "h-2"; e.target.parentElement.style.background = ev.type === "movie" ? "linear-gradient(90deg, #6366f1, #8b5cf6)" : "linear-gradient(90deg, #f59e0b, #ef4444)"; }} />
+              </div>
+            ) : (
+              <div className="h-2" style={{ background: ev.type === "movie" ? "linear-gradient(90deg, #6366f1, #8b5cf6)" : "linear-gradient(90deg, #f59e0b, #ef4444)" }} />
+            )}
             <CardContent className="p-5 space-y-3">
               <div className="flex items-start justify-between gap-2">
                 <h3 className="font-semibold text-lg leading-tight">{ev.title}</h3>

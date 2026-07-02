@@ -55,18 +55,13 @@ const createBooking = asyncHandler(async (req, res) => {
         userId: req.user.userId,
         eventId,
         totalAmount,
-        status: "confirmed",
+        status: "pending",
         qrCode: "",
       },
     });
 
     const qrData = JSON.stringify({ ref: reference, event: eventId, seats: showSeatIds });
     const qrBase64 = await generateQR(qrData);
-
-    await tx.booking.update({
-      where: { id: booking.id },
-      data: { qrCode: qrBase64 },
-    });
 
     for (const row of locked) {
       const price = pricingMap[row.category_id] || 0;
@@ -82,6 +77,11 @@ const createBooking = asyncHandler(async (req, res) => {
         update: { bookingId: booking.id, priceAtTime: price },
       });
     }
+
+    await tx.booking.update({
+      where: { id: booking.id },
+      data: { qrCode: qrBase64, status: "confirmed" },
+    });
 
     return { booking, reference, qrBase64, totalAmount, seats: locked };
   });
@@ -155,7 +155,7 @@ const cancelBooking = asyncHandler(async (req, res) => {
   });
   if (!booking) throw new AppError(404, "Booking not found");
   if (booking.userId !== req.user.userId) throw new AppError(403, "Not your booking");
-  if (booking.status !== "confirmed") throw new AppError(400, "Booking is not active");
+  if (!["confirmed", "pending"].includes(booking.status)) throw new AppError(400, "Booking is not active");
 
   await prisma.$transaction(async (tx) => {
     await tx.booking.update({ where: { id: bookingId }, data: { status: "cancelled" } });

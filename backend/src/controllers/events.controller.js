@@ -177,7 +177,7 @@ const getSeatMap = asyncHandler(async (req, res) => {
   }
 
   res.json({
-    event: { id: event.id, title: event.title, type: event.type, date: event.date, duration: event.duration },
+    event: { id: event.id, title: event.title, type: event.type, date: event.date, duration: event.duration, posterUrl: event.posterUrl },
     venue: { id: event.venue.id, name: event.venue.name, rows: event.venue.rows, columns: event.venue.columns },
     categories: event.venue.seatCategories,
     seatGrid: Object.values(rows).sort((a, b) => a.rowLabel.localeCompare(b.rowLabel)),

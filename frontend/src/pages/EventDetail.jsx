@@ -65,8 +65,13 @@ export default function EventDetail() {
 
   return (
     <div className="max-w-5xl mx-auto space-y-8 py-6">
-      <div className="flex items-start justify-between gap-4">
-        <div>
+      <div className="flex items-start gap-6">
+        {event.posterUrl && (
+          <div className="hidden sm:block w-40 shrink-0 rounded-lg overflow-hidden bg-muted">
+            <img src={event.posterUrl} alt={event.title} className="w-full aspect-[2/3] object-cover" onError={(e) => { e.target.style.display = "none"; }} />
+          </div>
+        )}
+        <div className="flex-1 min-w-0">
           <h1 className="text-3xl font-bold tracking-tight">{event.title}</h1>
           <div className="flex flex-wrap items-center gap-2 mt-2 text-muted-foreground">
             <Badge variant="outline" className="capitalize">{event.type}</Badge>

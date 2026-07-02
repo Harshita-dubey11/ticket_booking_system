@@ -8,6 +8,7 @@ router.use(authenticate);
 
 router.post("/", placeHold);
 router.delete("/", releaseHold);
+router.delete("/:showSeatId", releaseHold);
 router.get("/", getHolds);
 
 module.exports = router;

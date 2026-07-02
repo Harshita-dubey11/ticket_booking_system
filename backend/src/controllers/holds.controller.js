@@ -38,12 +38,21 @@ const placeHold = asyncHandler(async (req, res) => {
 });
 
 const releaseHold = asyncHandler(async (req, res) => {
-  const { eventId, showSeatIds } = req.body;
-  if (!eventId || !showSeatIds || !Array.isArray(showSeatIds) || showSeatIds.length === 0) {
-    throw new AppError(400, "eventId and showSeatIds array are required");
+  let eventId, showSeatIds;
+
+  if (req.params.showSeatId) {
+    eventId = req.body.eventId;
+    if (!eventId) throw new AppError(400, "eventId is required in body");
+    showSeatIds = [req.params.showSeatId];
+  } else {
+    eventId = req.body.eventId;
+    showSeatIds = req.body.showSeatIds;
+    if (!eventId || !showSeatIds || !Array.isArray(showSeatIds) || showSeatIds.length === 0) {
+      throw new AppError(400, "eventId and showSeatIds array are required");
+    }
   }
 
-  const result = await prisma.$transaction(async (tx) => {
+  await prisma.$transaction(async (tx) => {
     const rows = await tx.$queryRawUnsafe(
       `SELECT id, held_by FROM show_seats WHERE id IN (${showSeatIds.map((_, i) => `$${i + 1}`).join(",")}) FOR UPDATE`,
       ...showSeatIds,
@@ -58,8 +67,6 @@ const releaseHold = asyncHandler(async (req, res) => {
       `UPDATE show_seats SET status = 'available', held_by = NULL, held_at = NULL, held_until = NULL WHERE id IN (${showSeatIds.map((_, i) => `$${i + 1}`).join(",")})`,
       ...showSeatIds,
     );
-
-    return true;
   });
 
   emitSeatUpdate(eventId, showSeatIds, "available");
