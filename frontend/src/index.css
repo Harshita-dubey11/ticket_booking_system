@@ -335,3 +335,158 @@ body {
   color: #999;
   padding: 2rem;
 }
+
+.event-detail h1 {
+  margin-bottom: 0.25rem;
+}
+
+.event-meta {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.seat-map-container {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  padding: 1.5rem;
+}
+
+.seat-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #eee;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.8rem;
+  color: #555;
+}
+
+.legend-swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+}
+
+.seat-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.seat-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.row-label {
+  width: 1.5rem;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #888;
+}
+
+.row-seats {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.seat {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 2px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 0.65rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.seat:hover:not(:disabled) {
+  transform: scale(1.1);
+  z-index: 1;
+}
+
+.seat:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.seat.available {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.seat.held {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.seat.booked {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.seat.selected {
+  background: #1a1a2e !important;
+  color: #fff !important;
+  border-color: #1a1a2e !important;
+  transform: scale(1.1);
+}
+
+.seat.mine {
+  box-shadow: 0 0 0 2px #ff9800;
+}
+
+.seat-actions {
+  margin-top: 1.5rem;
+  background: #fff;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.selection-info {
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+.held-timer {
+  color: #e65100;
+  font-weight: 600;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.btn-secondary {
+  padding: 0.5rem 1rem;
+  background: transparent;
+  color: #1a1a2e;
+  border: 1px solid #1a1a2e;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.btn-secondary:hover {
+  background: #f0f0f0;
+}

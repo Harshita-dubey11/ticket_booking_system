@@ -147,7 +147,45 @@ const getRevenue = asyncHandler(async (req, res) => {
   res.json({ totalRevenue, bookingCount: bookings.length, bookings });
 });
 
+const getSeatMap = asyncHandler(async (req, res) => {
+  const eventId = req.params.id;
+  const event = await prisma.event.findUnique({
+    where: { id: eventId },
+    include: { venue: { include: { seatCategories: true } } },
+  });
+  if (!event) throw new AppError(404, "Event not found");
+
+  const showSeats = await prisma.showSeat.findMany({
+    where: { eventId },
+    include: { seat: { include: { category: true } } },
+    orderBy: [{ seat: { rowLabel: "asc" } }, { seat: { colNumber: "asc" } }],
+  });
+
+  const rows = {};
+  for (const ss of showSeats) {
+    const row = ss.seat.rowLabel;
+    if (!rows[row]) rows[row] = { rowLabel: row, seats: [] };
+    rows[row].seats.push({
+      id: ss.id,
+      seatId: ss.seat.id,
+      label: ss.seat.label,
+      category: { id: ss.seat.category.id, name: ss.seat.category.name, color: ss.seat.category.color },
+      status: ss.status,
+      heldBy: ss.heldBy,
+      heldUntil: ss.heldUntil,
+    });
+  }
+
+  res.json({
+    event: { id: event.id, title: event.title, type: event.type, date: event.date, duration: event.duration },
+    venue: { id: event.venue.id, name: event.venue.name, rows: event.venue.rows, columns: event.venue.columns },
+    categories: event.venue.seatCategories,
+    seatGrid: Object.values(rows).sort((a, b) => a.rowLabel.localeCompare(b.rowLabel)),
+  });
+});
+
 module.exports = {
+  browseEvents, getMyEvents, getEvent, getSeatMap,
   browseEvents, getMyEvents, getEvent,
   createEvent, updateEvent, deleteEvent,
   setPricing, getRevenue,

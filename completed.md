@@ -29,12 +29,16 @@
 - [x] Seed script with test users, venue, categories, and seats
 
 ## Phase 3 — Seat Map & Seat Hold
-- [ ] ShowSeats generated on event creation
-- [ ] GET /events/:id/seats (seat grid with statuses)
-- [ ] POST /holds with SELECT FOR UPDATE concurrency
-- [ ] Seat hold TTL: cron-based auto-release
-- [ ] Socket.IO: real-time seat status broadcast
-- [ ] Frontend: Visual seat map component
+- [x] ShowSeats generated on event creation
+- [x] GET /events/:id/seats (seat grid with statuses, grouped by row)
+- [x] POST /holds with SELECT FOR UPDATE concurrency protection
+- [x] DELETE /holds — release held seats
+- [x] GET /holds — list current user's active holds
+- [x] Seat hold TTL: node-cron every minute, auto-release expired holds + socket broadcast
+- [x] Socket.IO: real-time seat status broadcast on hold/release/expiry
+- [x] Frontend: SeatMap component with live status, color-coded categories, selection
+- [x] Frontend: EventDetail page with hold/release actions and real-time updates
+- [x] Frontend: Socket client service with event room join/leave
 
 ## Phase 4 — Booking & Payment
 - [ ] POST /bookings atomic transaction

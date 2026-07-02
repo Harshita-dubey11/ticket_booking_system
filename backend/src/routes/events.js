@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const { authenticate, authorize } = require("../middleware/auth");
 const {
-  browseEvents, getMyEvents, getEvent,
+  browseEvents, getMyEvents, getEvent, getSeatMap,
   createEvent, updateEvent, deleteEvent,
   setPricing, getRevenue,
 } = require("../controllers/events.controller");
@@ -11,6 +11,7 @@ const router = Router();
 router.get("/", browseEvents);
 router.get("/my", authenticate, authorize("organiser", "admin"), getMyEvents);
 router.get("/:id", getEvent);
+router.get("/:id/seats", getSeatMap);
 
 router.post("/", authenticate, authorize("organiser"), createEvent);
 router.put("/:id", authenticate, authorize("organiser", "admin"), updateEvent);
