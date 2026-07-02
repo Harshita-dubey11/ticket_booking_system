@@ -16,11 +16,15 @@ export default function Navbar() {
       <div className="nav-links">
         {user ? (
           <>
+            <Link to="/events">Events</Link>
+            {user.role === "admin" && <Link to="/admin">Admin</Link>}
+            {(user.role === "organiser" || user.role === "admin") && <Link to="/organiser">Organiser</Link>}
             <span className="nav-user">{user.name} ({user.role})</span>
             <button onClick={handleLogout}>Logout</button>
           </>
         ) : (
           <>
+            <Link to="/events">Events</Link>
             <Link to="/login">Login</Link>
             <Link to="/register">Register</Link>
           </>

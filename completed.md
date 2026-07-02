@@ -15,12 +15,18 @@
 - [x] Frontend auth pages (Login, Register)
 
 ## Phase 2 — Venue & Event Management
-- [ ] Admin: Venue CRUD
-- [ ] Admin: Seat categories + seat layout
-- [ ] Organiser: Event CRUD
-- [ ] Organiser: Per-category pricing
-- [ ] Frontend: Admin dashboard
-- [ ] Frontend: Organiser dashboard
+- [x] Prisma schema: Venue, SeatCategory, Seat, Event, EventPricing, ShowSeat, Booking, BookingSeat, Waitlist models
+- [x] Admin: Venue CRUD (create, list, get, update, delete)
+- [x] Admin: Seat categories (create, update, delete)
+- [x] Admin: Auto-generate seats from venue dimensions with category assignment
+- [x] Organiser: Event CRUD with auto-showSeat generation
+- [x] Organiser: Per-category pricing (setPricing endpoint)
+- [x] Organiser: Revenue summary endpoint
+- [x] Public: Event browsing with type/search filtering
+- [x] Frontend: Admin dashboard (manage venues, categories, generate seats)
+- [x] Frontend: Organiser dashboard (manage events, set pricing)
+- [x] Frontend: Event browse page with search/filter
+- [x] Seed script with test users, venue, categories, and seats
 
 ## Phase 3 — Seat Map & Seat Hold
 - [ ] ShowSeats generated on event creation
