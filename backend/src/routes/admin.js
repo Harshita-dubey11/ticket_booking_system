@@ -8,19 +8,18 @@ const {
 
 const router = Router();
 
-router.use(authenticate, authorize("admin"));
+router.get("/venues", authenticate, authorize("admin", "organiser"), getVenues);
+router.get("/venues/:id", authenticate, authorize("admin", "organiser"), getVenue);
 
-router.get("/venues", getVenues);
-router.post("/venues", createVenue);
-router.get("/venues/:id", getVenue);
-router.put("/venues/:id", updateVenue);
-router.delete("/venues/:id", deleteVenue);
+router.post("/venues", authenticate, authorize("admin"), createVenue);
+router.put("/venues/:id", authenticate, authorize("admin"), updateVenue);
+router.delete("/venues/:id", authenticate, authorize("admin"), deleteVenue);
 
-router.post("/venues/:id/categories", createCategory);
-router.put("/categories/:id", updateCategory);
-router.delete("/categories/:id", deleteCategory);
+router.post("/venues/:id/categories", authenticate, authorize("admin"), createCategory);
+router.put("/categories/:id", authenticate, authorize("admin"), updateCategory);
+router.delete("/categories/:id", authenticate, authorize("admin"), deleteCategory);
 
-router.post("/venues/:id/generate-seats", generateSeats);
-router.put("/seats/:id", updateSeatCategory);
+router.post("/venues/:id/generate-seats", authenticate, authorize("admin"), generateSeats);
+router.put("/seats/:id", authenticate, authorize("admin"), updateSeatCategory);
 
 module.exports = router;
