@@ -7,12 +7,12 @@
 - [x] Create completed.md checklist
 
 ## Phase 1 — Project Setup & Auth
-- [ ] Backend: Express + TypeScript initialized
-- [ ] Frontend: React + Vite + TypeScript initialized
-- [ ] Prisma schema: User model
-- [ ] JWT auth middleware + role guard
-- [ ] Register / Login / Me endpoints
-- [ ] Frontend auth pages (Login, Register)
+- [x] Backend: Express + TypeScript initialized
+- [x] Frontend: React + Vite + TypeScript initialized
+- [x] Prisma schema: User model
+- [x] JWT auth middleware + role guard
+- [x] Register / Login / Me endpoints
+- [x] Frontend auth pages (Login, Register)
 
 ## Phase 2 — Venue & Event Management
 - [ ] Admin: Venue CRUD
