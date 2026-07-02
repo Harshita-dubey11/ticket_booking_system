@@ -17,6 +17,8 @@ export default function Navbar() {
         {user ? (
           <>
             <Link to="/events">Events</Link>
+            <Link to="/bookings">My Bookings</Link>
+            <Link to="/waitlist">Waitlist</Link>
             {user.role === "admin" && <Link to="/admin">Admin</Link>}
             {(user.role === "organiser" || user.role === "admin") && <Link to="/organiser">Organiser</Link>}
             <span className="nav-user">{user.name} ({user.role})</span>

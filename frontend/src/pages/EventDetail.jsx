@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { api } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import SeatMap from "../components/SeatMap";
@@ -51,6 +51,18 @@ export default function EventDetail() {
     }
   }
 
+  async function handleJoinWaitlist(categoryId) {
+    if (!user) { navigate("/login"); return; }
+    setError("");
+    setMessage("");
+    try {
+      await api.post(`/events/${id}/waitlist`, { categoryId });
+      setMessage("You've joined the waitlist for this category.");
+    } catch (err) {
+      setError(err.message);
+    }
+  }
+
   if (!data) return <p>Loading...</p>;
 
   const { event, venue, categories, seatGrid } = data;
@@ -59,7 +71,8 @@ export default function EventDetail() {
     <div className="event-detail">
       <h1>{event.title}</h1>
       <p className="event-meta">
-        {event.type} at {venue.name} — {new Date(event.date).toLocaleDateString()} {new Date(event.date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} — {event.duration}min
+        {event.type} at {venue.name} — {new Date(event.date).toLocaleDateString()}{" "}
+        {new Date(event.date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} — {event.duration}min
       </p>
 
       <SeatMap
@@ -85,11 +98,22 @@ export default function EventDetail() {
             <button className="btn-primary" onClick={handleHold}>Hold Seats</button>
           )}
           {heldUntil && (
-            <button className="btn-primary">Proceed to Booking</button>
+            <Link to={`/checkout/${event.id}`} className="btn-primary">Proceed to Booking</Link>
           )}
           {heldUntil && (
             <button className="btn-secondary" onClick={handleRelease}>Release Seats</button>
           )}
+        </div>
+      </div>
+
+      <div className="waitlist-section">
+        <h3>Sold out? Join the waitlist</h3>
+        <div className="waitlist-categories">
+          {categories.map((cat) => (
+            <button key={cat.id} className="btn-secondary" onClick={() => handleJoinWaitlist(cat.id)}>
+              {cat.name}
+            </button>
+          ))}
         </div>
       </div>
     </div>

@@ -41,25 +41,33 @@
 - [x] Frontend: Socket client service with event room join/leave
 
 ## Phase 4 — Booking & Payment
-- [ ] POST /bookings atomic transaction
-- [ ] QR code generation
-- [ ] Email delivery with QR code
-- [ ] Frontend: Checkout flow
-- [ ] Frontend: Booking history
+- [x] POST /bookings atomic transaction (FOR UPDATE lock, verify hold, calculate total, create booking+seats)
+- [x] QR code generation (qrcode package, PNG → base64, stores in booking record)
+- [x] Email delivery with QR code (Nodemailer, configurable SMTP, QR as inline attachment)
+- [x] GET /bookings — booking history with QR display
+- [x] GET /bookings/:id — single booking detail
+- [x] POST /bookings/:id/cancel — cancel + trigger waitlist auto-assignment
+- [x] Frontend: Checkout page (held seats summary, confirm booking, confirmation screen)
+- [x] Frontend: Booking history page (list, status badges, QR expand, cancel action)
 
 ## Phase 5 — Waitlist & Auto-Assignment
-- [ ] POST /events/:id/waitlist
-- [ ] Waitlist FIFO queue per (event, category)
-- [ ] Auto-assignment on cancellation
-- [ ] Time-limited offer flow with email
-- [ ] Cron: expire stale offers, promote next in line
-- [ ] Frontend: Waitlist join / status UI
+- [x] POST /events/:id/waitlist — join waitlist for a category
+- [x] GET /waitlist — view my waitlist entries with status
+- [x] DELETE /waitlist/:id — leave waitlist
+- [x] FIFO queue per (event, category) — ordered by created_at
+- [x] Auto-assignment on cancellation — finds next waiting entry, sets offered + holds seat
+- [x] Time-limited offer flow with email (30min offer TTL, email with claim link)
+- [x] Cron: expire stale offers every minute, release seat, no auto-cascade to next
+- [x] Frontend: Waitlist page with status display + leave action
+- [x] Frontend: EventDetail has waitlist join buttons per category
 
 ## Phase 6 — Organiser Dashboard & Polish
-- [ ] Booking summary + revenue per event
-- [ ] Event filtering / search
-- [ ] Error handling, loading states, edge cases
-- [ ] README with setup guide, API docs, DB schema
+- [x] GET /events/:id/revenue — booking summary + total revenue per event
+- [x] Event filtering / search on browse page (by type, text search)
+- [x] Error handling across all controllers (asyncHandler wrapper)
+- [x] README.md with setup guide, API docs, DB schema, key logic explanations
+- [x] .env.example with all configuration fields documented
+- [x] Seed script with test accounts and sample data
 
 ## Phase 7 — System Design & Deployment
 - [ ] system-design.md (≤800 words)
