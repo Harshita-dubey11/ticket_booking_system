@@ -1,23 +1,24 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import ErrorBoundary from "./components/ErrorBoundary";
+import ProtectedRoute from "./components/ProtectedRoute";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import AdminDashboard from "./pages/AdminDashboard";
 import OrganiserDashboard from "./pages/OrganiserDashboard";
+import MyEvents from "./pages/MyEvents";
 import EventBrowse from "./pages/EventBrowse";
 import EventDetail from "./pages/EventDetail";
 import Checkout from "./pages/Checkout";
 import BookingHistory from "./pages/BookingHistory";
 import WaitlistPage from "./pages/WaitlistPage";
-import { useAuth } from "./context/AuthContext";
+import NotFound from "./pages/NotFound";
 import "./index.css";
 
 export default function App() {
-  const { user } = useAuth();
-
   return (
-    <>
+    <ErrorBoundary>
       <Navbar />
       <main className="container">
         <Routes>
@@ -26,17 +27,15 @@ export default function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/events" element={<EventBrowse />} />
           <Route path="/events/:id" element={<EventDetail />} />
-          <Route path="/checkout/:id" element={user ? <Checkout /> : <Login />} />
-          <Route path="/bookings" element={user ? <BookingHistory /> : <Login />} />
-          <Route path="/waitlist" element={user ? <WaitlistPage /> : <Login />} />
-          {user?.role === "admin" && (
-            <Route path="/admin" element={<AdminDashboard />} />
-          )}
-          {(user?.role === "organiser" || user?.role === "admin") && (
-            <Route path="/organiser" element={<OrganiserDashboard />} />
-          )}
+          <Route path="/checkout/:id" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
+          <Route path="/bookings" element={<ProtectedRoute><BookingHistory /></ProtectedRoute>} />
+          <Route path="/waitlist" element={<ProtectedRoute><WaitlistPage /></ProtectedRoute>} />
+          <Route path="/organiser" element={<ProtectedRoute roles={["organiser", "admin"]}><OrganiserDashboard /></ProtectedRoute>} />
+          <Route path="/admin" element={<ProtectedRoute roles={["admin"]}><AdminDashboard /></ProtectedRoute>} />
+          <Route path="/my-events" element={<ProtectedRoute roles={["organiser", "admin"]}><MyEvents /></ProtectedRoute>} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
-    </>
+    </ErrorBoundary>
   );
 }
