@@ -70,8 +70,15 @@
 - [x] Seed script with test accounts and sample data
 
 ## Phase 7 — System Design & Deployment
-- [ ] system-design.md (≤800 words)
+- [x] system-design.md (613 words)
 - [ ] Deploy backend (Render/Railway)
 - [ ] Deploy frontend (Vercel)
 - [ ] End-to-end testing
 - [ ] Final cleanup & zip
+
+## Extra — Alignment with Planning Spec
+- [x] poster_url field on Event model (schema + seed + frontend display)
+- [x] Booking status "pending" → "confirmed" flow (default: pending)
+- [x] DELETE /holds/:showSeatId param-based route added
+- [x] Orphaned BookingSeat records cleaned up on cancel
+- [x] BookingSeat uses upsert (resilient against stale records)
