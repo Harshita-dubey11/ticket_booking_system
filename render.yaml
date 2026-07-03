@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: ticket-booking-api
+    env: node
+    rootDir: backend
+    buildCommand: npm install && npx prisma generate && npx prisma db push
+    startCommand: node src/index.js
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: PORT
+        value: 3000
+      - key: SEAT_HOLD_TTL_MINUTES
+        value: 10
+      - key: FRONTEND_URL
+        sync: false

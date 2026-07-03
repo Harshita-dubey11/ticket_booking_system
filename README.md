@@ -165,7 +165,33 @@ waitlist           (id, user_id, event_id, category_id, status[waiting|offered|e
 
 ---
 
-## Key Logic Explanations
+## Deployment
+
+### Backend (Render)
+
+1. Push this repo to GitHub
+2. Go to [dashboard.render.com](https://dashboard.render.com) → New → Web Service
+3. Connect your GitHub repo
+4. Set **Root Directory** to `backend`
+5. **Build Command:** `npm install && npx prisma generate && npx prisma db push`
+6. **Start Command:** `node src/index.js`
+7. Add environment variables from `.env.example` (DATABASE_URL, JWT_SECRET, etc.)
+8. Enable CORS for your Vercel frontend URL
+
+### Frontend (Vercel)
+
+1. Go to [vercel.com](https://vercel.com) → New Project
+2. Import the same GitHub repo
+3. Set **Root Directory** to `frontend`
+4. **Build Command:** `npm run build`
+5. **Output Directory:** `dist`
+6. Add environment variable:
+   - `VITE_API_URL` = your Render backend URL (e.g. `https://ticket-booking-api.onrender.com/api`)
+7. Deploy
+
+### Database
+
+The project uses [Neon](https://neon.tech) serverless PostgreSQL. Your `DATABASE_URL` from the `.env` file connects directly — no separate database setup needed.
 
 ### Seat Hold TTL & Auto-Release
 
